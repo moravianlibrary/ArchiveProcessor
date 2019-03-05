@@ -1,7 +1,8 @@
 package cz.mzk.archiveprocessor;
 
-import org.junit.Assert;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * @author kremlacek
@@ -11,6 +12,6 @@ public class AppTest {
     //Placeholder test
     @Test
     public void test() {
-        Assert.assertTrue(true);
+        assertTrue(true);
     }
 }

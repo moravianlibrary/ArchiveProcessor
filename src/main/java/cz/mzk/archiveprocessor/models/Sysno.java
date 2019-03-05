@@ -46,6 +46,10 @@ public class Sysno {
         base = base.toLowerCase();
         this.base = Base.fromString(base);
 
+        if (this.base == null) {
+            throw new IllegalArgumentException("Invalid base " + base + ".");
+        }
+
         if (num.length() != SYSNO_NUM_LENGTH) {
             throw new IllegalArgumentException("Invalid sysno length. Required " + SYSNO_NUM_LENGTH + ", instead got " + num.length());
         }
