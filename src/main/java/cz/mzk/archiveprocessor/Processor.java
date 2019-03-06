@@ -7,6 +7,8 @@ import cz.mzk.archiveprocessor.models.Sysno;
  */
 public class Processor {
 
+    AlephConnector connector = new AlephConnector();
+
     /**
      * Attempt to determine sysno from a given identifier. Returns null if could not be loaded.
      *
@@ -21,11 +23,11 @@ public class Processor {
         }
 
         //identifier not sysno, try to load via barcode
-        sys = AlephConnector.getSysnoFromBarcode(identifier);
+        sys = connector.getSysnoFromBarcode(identifier);
 
         //barcode failed, try signature
         if (sys == null) {
-            sys = AlephConnector.getSysnoFromSignature(identifier);
+            sys = connector.getSysnoFromSignature(identifier);
         }
 
         return sys;

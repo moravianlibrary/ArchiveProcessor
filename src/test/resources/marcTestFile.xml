@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<present>
+    <record>
+        <record_header>
+            <set_entry>000000001</set_entry>
+        </record_header>
+        <doc_number>000960951</doc_number>
+        <metadata>
+            <oai_marc>
+                <fixfield id="FMT">BK</fixfield>
+                <fixfield id="LDR">-----nam-a22-----2a-4500</fixfield>
+                <fixfield id="001">000960951</fixfield>
+                <fixfield id="003">CZ-BrMZK</fixfield>
+                <fixfield id="005">20150518153252.0</fixfield>
+                <fixfield id="007">ta</fixfield>
+                <fixfield id="008">090817s1950----xo-a---er|||||||||||slo-d</fixfield>
+                <varfield id="040" i1=" " i2=" ">
+                    <subfield label="a">ABA001</subfield>
+                    <subfield label="b">cze</subfield>
+                    <subfield label="c">BOA001</subfield>
+                    <subfield label="d">ABA001</subfield>
+                </varfield>
+                <varfield id="100" i1="1" i2=" ">
+                    <subfield label="a">Macák, Jaroslav,</subfield>
+                    <subfield label="d">1900-1981</subfield>
+                    <subfield label="7">kv2011636143</subfield>
+                    <subfield label="4">pht</subfield>
+                </varfield>
+                <varfield id="245" i1="1" i2="0">
+                    <subfield label="a">Domica, jaskyňa pračloveka vo fotografii Jaroslava Macáka /</subfield>
+                    <subfield label="c">úv. text: A. Lutonský ; s kr. V. Kubašty</subfield>
+                </varfield>
+                <varfield id="260" i1=" " i2=" ">
+                    <subfield label="a">Lipt. Sv. Mikuláš :</subfield>
+                    <subfield label="b">Slovtour,</subfield>
+                    <subfield label="c">1950</subfield>
+                </varfield>
+                <varfield id="300" i1=" " i2=" ">
+                    <subfield label="a">[12] s. :</subfield>
+                    <subfield label="b">[48] s. obr. příl. [32] s. barev. obr. příl. ;</subfield>
+                    <subfield label="c">4°</subfield>
+                </varfield>
+                <varfield id="500" i1=" " i2=" ">
+                    <subfield label="a">10000 výt.</subfield>
+                </varfield>
+                <varfield id="500" i1=" " i2=" ">
+                    <subfield label="a">Zdobené předsádky</subfield>
+                </varfield>
+                <varfield id="700" i1="1" i2=" ">
+                    <subfield label="a">Lutonský, Alojz,</subfield>
+                    <subfield label="d">1905-1997</subfield>
+                    <subfield label="7">ola2003193716</subfield>
+                    <subfield label="4">aui</subfield>
+                </varfield>
+                <varfield id="910" i1=" " i2=" ">
+                    <subfield label="a">BOA001</subfield>
+                    <subfield label="b">TK-A-0039.785</subfield>
+                </varfield>
+                <varfield id="SGG" i1=" " i2=" ">
+                    <subfield label="a">0039.785</subfield>
+                </varfield>
+                <varfield id="CAT" i1=" " i2=" ">
+                    <subfield label="a">STEMMI</subfield>
+                    <subfield label="b">50</subfield>
+                    <subfield label="c">20090817</subfield>
+                    <subfield label="l">MZK01</subfield>
+                    <subfield label="h">1430</subfield>
+                </varfield>
+                <varfield id="CAT" i1=" " i2=" ">
+                    <subfield label="c">20091016</subfield>
+                    <subfield label="l">MZK01</subfield>
+                    <subfield label="h">1204</subfield>
+                </varfield>
+                <varfield id="CAT" i1=" " i2=" ">
+                    <subfield label="c">20120803</subfield>
+                    <subfield label="l">MZK01</subfield>
+                    <subfield label="h">2317</subfield>
+                </varfield>
+                <varfield id="CAT" i1=" " i2=" ">
+                    <subfield label="a">BARTMA</subfield>
+                    <subfield label="b">50</subfield>
+                    <subfield label="c">20150518</subfield>
+                    <subfield label="l">MZK01</subfield>
+                    <subfield label="h">1532</subfield>
+                </varfield>
+                <varfield id="MZK" i1=" " i2=" ">
+                    <subfield label="b">200908</subfield>
+                </varfield>
+                <varfield id="PRU" i1=" " i2=" ">
+                    <subfield label="a">RetroR 090817 št</subfield>
+                </varfield>
+                <varfield id="SKC" i1=" " i2=" ">
+                    <subfield label="a">20091016</subfield>
+                </varfield>
+            </oai_marc>
+        </metadata>
+    </record>
+    <session-id>D2NF47IJ3C45X5YH37SV19HH474XM8H4CMCQQ79LYSEYFV4YYS</session-id>
+</present>
