@@ -6,6 +6,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.List;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
@@ -17,8 +19,11 @@ import javax.xml.transform.stream.StreamResult;
 public class Processor {
 
     private static final String ERROR_NOT_DIRECTORY = "Supplied file is not a directory.";
-    private static final String ERROR_COULD_NOT_RETREIVE_SYSNO = "Could not find sysno for supplied identifier";
+    private static final String ERROR_COULD_NOT_RETREIVE_SYSNO = "Could not find sysno for supplied identifier.";
     private static final String ERROR_JAVA_EXCEPTION = "Java error occured.\n";
+    private static final String ERROR_NOT_VALID_IMAGE_DIRECTORY = "Supplied directory must contain only images.";
+
+    private static final List<String> SUPPORTED_IMAGE_TYPES = Arrays.asList(".pdf", ".tiff", ".jpg", ".jp2");
 
     private final File errorDirectory;
     private final File archiveDirectory;
@@ -73,6 +78,10 @@ public class Processor {
                 moveToError(file, ERROR_NOT_DIRECTORY);
             }
 
+            if (!isValidImageDirectory(file)) {
+                moveToError(file, ERROR_NOT_VALID_IMAGE_DIRECTORY);
+            }
+
             Sysno s = loadSysno(file.getName());
 
             if (s == null) {
@@ -85,6 +94,28 @@ public class Processor {
                 moveToError(file, ERROR_JAVA_EXCEPTION + " " + e.getMessage());
             }
         }
+    }
+
+    /**
+     * Checks whether target directory contains only supported image types
+     *
+     * @param directory directory to be checked
+     */
+    private boolean isValidImageDirectory(File directory) {
+
+        for(File f : directory.listFiles()) {
+            //contents must be files
+            if (!f.isFile()) {
+                return false;
+            }
+
+            //contents must be supported image types
+            if (!SUPPORTED_IMAGE_TYPES.contains(f.getName().substring(f.getName().lastIndexOf(".")))) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**
