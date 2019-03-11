@@ -5,6 +5,11 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
+import java.nio.file.Path;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 /**
  * @author kremlacek
@@ -13,6 +18,7 @@ public class Processor {
 
     private static final String ERROR_NOT_DIRECTORY = "Supplied file is not a directory.";
     private static final String ERROR_COULD_NOT_RETREIVE_SYSNO = "Could not find sysno for supplied identifier";
+    private static final String ERROR_JAVA_EXCEPTION = "Java error occured.\n";
 
     private final File errorDirectory;
     private final File archiveDirectory;
@@ -73,7 +79,11 @@ public class Processor {
                 moveToError(file, ERROR_COULD_NOT_RETREIVE_SYSNO);
             }
 
-            moveToArchive(file, s);
+            try {
+                moveToArchive(file, s);
+            } catch (Exception e) {
+                moveToError(file, ERROR_JAVA_EXCEPTION + " " + e.getMessage());
+            }
         }
     }
 
@@ -83,8 +93,24 @@ public class Processor {
      * @param file file to be moved
      * @param sysno sysno of the file
      */
-    private void moveToArchive(File file, Sysno sysno) {
-        //TODO
+    private void moveToArchive(File file, Sysno sysno) throws IOException, TransformerException {
+
+        Path archivePath = archiveDirectory.toPath().resolve(sysno.getBase() + sysno.getNumericalPart());
+
+        //store mets into the package
+        TransformerFactory
+                .newInstance()
+                .newTransformer()
+                .transform(
+                        new DOMSource(connector.getMemoizedDoc(sysno)),
+                        new StreamResult(archivePath.resolve("mets.xml").toFile())
+                );
+
+        //copy data into archive
+        Files.copy(file.toPath(), archivePath.resolve("data"));
+
+        //delete original, do not use file moving - in case exception occurs during moving, data become inconsistent
+        Files.delete(file.toPath());
     }
 
     /**

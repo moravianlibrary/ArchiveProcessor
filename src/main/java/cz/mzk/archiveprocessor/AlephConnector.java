@@ -3,6 +3,8 @@ package cz.mzk.archiveprocessor;
 import cz.mzk.archiveprocessor.models.IdentifierType;
 import cz.mzk.archiveprocessor.models.Sysno;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -18,6 +20,8 @@ import org.xml.sax.SAXException;
 public class AlephConnector {
 
     private static Logger LOG = Logger.getLogger(AlephConnector.class.getName());
+
+    private Map<Sysno, Document> memoizedDocMap = new HashMap<>();
 
     public static final int RETRY_COUNT = 5;
 
@@ -98,7 +102,19 @@ public class AlephConnector {
 
         if (sysno == null || !base.startsWith("MZK0")) return null;
 
-        return new Sysno(base, sysno);
+        Sysno resultSysno = new Sysno(base, sysno);
+
+        memoizeDoc(resultSysno, doc);
+
+        return resultSysno;
+    }
+
+    private void memoizeDoc(Sysno sysno, Document doc) {
+        memoizedDocMap.put(sysno, doc);
+    }
+
+    public Document getMemoizedDoc(Sysno sysno) {
+        return memoizedDocMap.get(sysno);
     }
 
     private Document getResponseFromAleph(String identifierValue, int retryCount, IdentifierType type) {
