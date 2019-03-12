@@ -35,6 +35,10 @@ public class Processor {
 
     AlephConnector connector = new AlephConnector();
 
+    public Processor(AppConfiguration cfg) {
+        this(cfg.getErrorDirectory(), cfg.getOutputDirectory());
+    }
+
     /**
      * Attempt to determine sysno from a given identifier. Returns null if could not be loaded.
      *

@@ -79,4 +79,15 @@ public class AppConfiguration {
         }
     }
 
+    public File getOutputDirectory() {
+        return outputDirectory;
+    }
+
+    public File getErrorDirectory() {
+        return errorDirectory;
+    }
+
+    public File getInputDirectory() {
+        return inputDirectory;
+    }
 }
