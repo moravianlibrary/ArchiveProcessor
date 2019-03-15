@@ -8,20 +8,24 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Logger;
 import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.io.FileUtils;
 
 /**
  * @author kremlacek
  */
 public class Processor {
 
+    private static final Logger LOG = Logger.getLogger(Processor.class.getName());
+
     private static final String ERROR_NOT_DIRECTORY = "Supplied file is not a directory.";
     private static final String ERROR_COULD_NOT_RETREIVE_SYSNO = "Could not find sysno for supplied identifier.";
-    private static final String ERROR_JAVA_EXCEPTION = "Java error occured.\n";
+    private static final String ERROR_JAVA_EXCEPTION = "Java error occured during moving images to archive.";
     private static final String ERROR_NOT_VALID_IMAGE_DIRECTORY = "Supplied directory must contain only images.";
 
     private static final List<String> SUPPORTED_IMAGE_TYPES = Arrays.asList(".pdf", ".tiff", ".jpg", ".jp2");
@@ -146,7 +150,7 @@ public class Processor {
         }
 
         //copy data into archive
-        Files.copy(file.toPath(), archivePath.resolve("data"));
+        FileUtils.copyDirectory(file, archivePath.resolve("data").toFile());
 
         //store mets into the package
         TransformerFactory
@@ -163,7 +167,7 @@ public class Processor {
         createBagItFile(archivePath.resolve("bagit.txt").toFile());
 
         //delete original, do not use file moving - in case exception occurs during moving, data become inconsistent
-        Files.delete(file.toPath());
+        FileUtils.deleteDirectory(file);
     }
 
     /**
@@ -217,6 +221,7 @@ public class Processor {
      * @param errorMsg explanation of the error
      */
     private void moveToError(File file, String errorMsg) throws IOException {
+        LOG.warning("Images not archived. Reason: " + errorMsg);
         //move data into error
         Files.move(file.toPath(), errorDirectory.toPath().resolve(file.getName()));
 
