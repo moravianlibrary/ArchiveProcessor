@@ -12,6 +12,7 @@ import javax.xml.transform.TransformerException;
 import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
+import org.apache.commons.codec.digest.DigestUtils;
 
 /**
  * @author kremlacek
@@ -132,20 +133,81 @@ public class Processor {
 
         Path archivePath = archiveDirectory.toPath().resolve(sysno.getBase() + sysno.getNumericalPart());
 
+        //duplicate check, on duplicate start versioning
+        if (archivePath.toFile().exists()) {
+            //versioning
+            for (int i = 1;true;i++) {
+                archivePath = archiveDirectory.toPath().resolve(sysno.getBase() + sysno.getNumericalPart() + "_v" + i);
+
+                if (!archivePath.toFile().exists()) {
+                    break;
+                }
+            }
+        }
+
+        //copy data into archive
+        Files.copy(file.toPath(), archivePath.resolve("data"));
+
         //store mets into the package
         TransformerFactory
                 .newInstance()
                 .newTransformer()
                 .transform(
                         new DOMSource(connector.getMemoizedDoc(sysno)),
-                        new StreamResult(archivePath.resolve("mets.xml").toFile())
+                        new StreamResult(archivePath.resolve("data").resolve("mets.xml").toFile())
                 );
 
-        //copy data into archive
-        Files.copy(file.toPath(), archivePath.resolve("data"));
+        //create MD5 hashes file
+        processAndHashFileContents(archivePath.resolve("manifest-md5.txt").toFile(), archivePath.resolve("data").toFile());
+        //create bagit file
+        createBagItFile(archivePath.resolve("bagit.txt").toFile());
 
         //delete original, do not use file moving - in case exception occurs during moving, data become inconsistent
         Files.delete(file.toPath());
+    }
+
+    /**
+     * Creates bagit textfile according to the specification
+     *
+     * @param toFile
+     */
+    private void createBagItFile(File toFile) throws IOException {
+        FileWriter fw = new FileWriter(toFile, true);
+        fw.write("BagIt-Version: 1.0\n");
+        fw.write("Tag-File-Character-Encoding: UTF-8");
+        fw.close();
+    }
+
+    /**
+     * Creates file containing md5 hashes of files within supplied directory
+     *
+     * @param hashFile target file to contain hashes of data files
+     * @param dataDir directory containing files to be hashed
+     */
+    private void processAndHashFileContents(File hashFile, File dataDir) throws IOException {
+        if (hashFile.exists()) {
+            throw new IllegalArgumentException("HashFile can not exist. See: " + hashFile.getPath());
+        }
+
+        FileWriter fw = new FileWriter(hashFile, true);
+
+        processAndHashFileContents(fw, dataDir, "");
+
+        fw.close();
+    }
+
+    private void processAndHashFileContents(FileWriter hashFileWriter, File file, String path) throws IOException {
+        if (file.isDirectory()) {
+            for (File subFile : file.listFiles()) {
+                processAndHashFileContents(
+                        hashFileWriter,
+                        subFile,
+                        path + (path.isEmpty() ? "" : "/") + subFile.getName()); //path string starts without slash
+            }
+        } else {
+            String hash = DigestUtils.md5Hex(Files.newInputStream(file.toPath()));
+            hashFileWriter.write(hash + " " + path + "\n");
+        }
     }
 
     /**
