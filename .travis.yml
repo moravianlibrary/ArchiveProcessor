@@ -5,4 +5,5 @@ jdk:
   - openjdk11
 
 script:
+  - ./gradlew test -i
   - ./gradlew build
