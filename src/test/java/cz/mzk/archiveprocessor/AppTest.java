@@ -17,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class AppTest {
 
     Path testDir;
+    Path tmpDir;
 
     Path testIn;
     Path testOut;
@@ -30,10 +31,15 @@ public class AppTest {
 
     @BeforeEach
     public void beforeEach() throws IOException {
+        tmpDir = new File("./tmp").toPath();
         testDir = new File("./tmp/archiveProcessor-test").toPath();
 
         if (testDir.toFile().exists()) {
             FileUtils.deleteDirectory(testDir.toFile());
+        }
+
+        if (!tmpDir.toFile().exists()) {
+            Files.createDirectory(tmpDir);
         }
 
         Files.createDirectory(testDir) ;
@@ -54,7 +60,8 @@ public class AppTest {
 
     @Test
     public void runSimpleArchivation() throws IOException {
-        new Processor(testErr.toFile(), testOut.toFile()).processDirectory(testIn.toFile());
+        Processor p = new Processor(testErr.toFile(), testOut.toFile());
+        p.processDirectory(testIn.toFile());
 
         assertTrue(testIn.toFile().listFiles().length == 0, "All images must be processed.");
         assertTrue(testOut.toFile().listFiles().length > 0, "Images must be archived.");
