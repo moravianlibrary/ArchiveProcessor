@@ -60,7 +60,7 @@ public class AppTest {
 
     @Test
     public void runSimpleArchivation() throws IOException {
-        Processor p = new Processor(testErr.toFile(), testOut.toFile());
+        Processor p = new Processor(testErr.toFile(), testOut.toFile(), AlephConnectorTest.getMockAlephConnector());
         p.processDirectory(testIn.toFile());
 
         assertTrue(testIn.toFile().listFiles().length == 0, "All images must be processed.");

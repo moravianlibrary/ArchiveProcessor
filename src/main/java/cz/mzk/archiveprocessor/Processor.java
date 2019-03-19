@@ -32,16 +32,24 @@ public class Processor {
 
     private final File errorDirectory;
     private final File archiveDirectory;
-
-    public Processor(File errorDirectory, File archiveDirectory) {
-        this.errorDirectory = errorDirectory;
-        this.archiveDirectory = archiveDirectory;
-    }
-
-    AlephConnector connector = new AlephConnector();
+    private final AlephConnector connector;
 
     public Processor(AppConfiguration cfg) {
-        this(cfg.getErrorDirectory(), cfg.getOutputDirectory());
+        this(cfg, new AlephConnector());
+    }
+
+    public Processor(AppConfiguration cfg, AlephConnector connector) {
+        this(cfg.getErrorDirectory(), cfg.getOutputDirectory(), connector);
+    }
+
+    public Processor(File errorDirectory, File archiveDirectory) {
+        this(errorDirectory, archiveDirectory, new AlephConnector());
+    }
+
+    public Processor(File errorDirectory, File archiveDirectory, AlephConnector connector) {
+        this.errorDirectory = errorDirectory;
+        this.archiveDirectory = archiveDirectory;
+        this.connector = connector;
     }
 
     /**
