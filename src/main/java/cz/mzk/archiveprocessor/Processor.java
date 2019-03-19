@@ -147,13 +147,15 @@ public class Processor {
 
         //duplicate check, on duplicate start versioning
         if (archivePath.toFile().exists()) {
-            //versioning
-            for (int i = 1;true;i++) {
-                archivePath = archiveDirectory.toPath().resolve(sysno.getBase() + sysno.getNumericalPart() + "_v" + i);
+            Path versionedPath;
 
-                if (!archivePath.toFile().exists()) {
-                    break;
-                }
+        //versioning
+        for (int i = 0;true;i++) {
+            Path versionedPath = archivePath.resolve("v" + i);
+
+            if (!versionedPath.toFile().exists()) {
+                archivePath = versionedPath;
+                break;
             }
         }
 
