@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.xml.transform.TransformerException;
@@ -143,11 +144,18 @@ public class Processor {
      */
     private void moveToArchive(File file, Sysno sysno) throws IOException, TransformerException {
 
-        Path archivePath = archiveDirectory.toPath().resolve(sysno.getBase() + sysno.getNumericalPart());
+        //get base directory
+        Path archivePath = archiveDirectory.toPath()
+                .resolve(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)))
+                .resolve(sysno.getBase().toString());
 
-        //duplicate check, on duplicate start versioning
-        if (archivePath.toFile().exists()) {
-            Path versionedPath;
+        //get numerical directory names
+        String[] numericalPart = sysno.getNumericalPart().split("(?<=\\G.{3})");
+
+        //resolve numerical part
+        for (String part : numericalPart) {
+            archivePath = archivePath.resolve(part);
+        }
 
         //versioning
         for (int i = 0;true;i++) {
