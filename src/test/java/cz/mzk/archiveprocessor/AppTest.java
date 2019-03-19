@@ -1,5 +1,7 @@
 package cz.mzk.archiveprocessor;
 
+import cz.mzk.archiveprocessor.processor.MZKProcessor;
+import cz.mzk.archiveprocessor.processor.Processor;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -60,7 +62,7 @@ public class AppTest {
 
     @Test
     public void runSimpleArchivation() throws IOException {
-        Processor p = new Processor(testErr.toFile(), testOut.toFile(), AlephConnectorTest.getMockAlephConnector());
+        Processor p = new MZKProcessor(testErr.toFile(), testOut.toFile(), AlephConnectorTest.getMockAlephConnector());
         p.processDirectory(testIn.toFile());
 
         assertTrue(testIn.toFile().listFiles().length == 0, "All images must be processed.");

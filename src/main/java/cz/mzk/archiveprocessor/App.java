@@ -1,5 +1,6 @@
 package cz.mzk.archiveprocessor;
 
+import cz.mzk.archiveprocessor.processor.MZKProcessor;
 import java.io.IOException;
 
 /**
@@ -18,7 +19,7 @@ public class App {
             System.exit(1);
         }
 
-        var processor = new Processor(cfg);
+        var processor = new MZKProcessor(cfg);
 
         try {
             processor.processDirectory(cfg.getInputDirectory());

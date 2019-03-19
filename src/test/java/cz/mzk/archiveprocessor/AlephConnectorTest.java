@@ -1,6 +1,6 @@
 package cz.mzk.archiveprocessor;
 
-import cz.mzk.archiveprocessor.models.Sysno;
+import cz.mzk.archiveprocessor.model.Sysno;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

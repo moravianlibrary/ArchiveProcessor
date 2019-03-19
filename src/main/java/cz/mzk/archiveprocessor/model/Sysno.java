@@ -1,4 +1,4 @@
-package cz.mzk.archiveprocessor.models;
+package cz.mzk.archiveprocessor.model;
 
 /**
  * Represents system number identifier.

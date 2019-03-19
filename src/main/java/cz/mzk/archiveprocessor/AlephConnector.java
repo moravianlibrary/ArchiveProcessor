@@ -1,7 +1,7 @@
 package cz.mzk.archiveprocessor;
 
-import cz.mzk.archiveprocessor.models.IdentifierType;
-import cz.mzk.archiveprocessor.models.Sysno;
+import cz.mzk.archiveprocessor.model.IdentifierType;
+import cz.mzk.archiveprocessor.model.Sysno;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;

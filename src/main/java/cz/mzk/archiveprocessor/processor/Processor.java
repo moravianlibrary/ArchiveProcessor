@@ -1,13 +1,14 @@
-package cz.mzk.archiveprocessor;
+package cz.mzk.archiveprocessor.processor;
 
-import cz.mzk.archiveprocessor.models.Sysno;
+import cz.mzk.archiveprocessor.AlephConnector;
+import cz.mzk.archiveprocessor.AppConfiguration;
+import cz.mzk.archiveprocessor.model.Sysno;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
-import java.util.Calendar;
 import java.util.List;
 import java.util.logging.Logger;
 import javax.xml.transform.TransformerException;
@@ -20,7 +21,7 @@ import org.apache.commons.io.FileUtils;
 /**
  * @author kremlacek
  */
-public class Processor {
+public abstract class Processor {
 
     private static final Logger LOG = Logger.getLogger(Processor.class.getName());
 
@@ -31,8 +32,9 @@ public class Processor {
 
     private static final List<String> SUPPORTED_IMAGE_TYPES = Arrays.asList(".pdf", ".tiff", ".jpg", ".jp2");
 
+    protected final File archiveDirectory;
     private final File errorDirectory;
-    private final File archiveDirectory;
+
     private final AlephConnector connector;
 
     public Processor(AppConfiguration cfg) {
@@ -242,24 +244,9 @@ public class Processor {
 
     /**
      * Resolves path in archive for the particular sysno. This resolution can be institution-specific.
-     * Default implementation is according to MZK, but can be easily overriden for other institution needs.
      *
      * @param sysno sysno to be resolved into path
      * @return resolved path within archiveDirectory
      */
-    protected Path resolveArchivePath(Sysno sysno) {
-        Path archivePath = archiveDirectory.toPath()
-                .resolve(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)))
-                .resolve(sysno.getBase().toString());
-
-        //get numerical directory names
-        String[] numericalPart = sysno.getNumericalPart().split("(?<=\\G.{3})");
-
-        //resolve numerical part
-        for (String part : numericalPart) {
-            archivePath = archivePath.resolve(part);
-        }
-
-        return archivePath;
-    }
+    protected abstract Path resolveArchivePath(Sysno sysno);
 }
