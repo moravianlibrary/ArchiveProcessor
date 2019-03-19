@@ -145,17 +145,7 @@ public class Processor {
     private void moveToArchive(File file, Sysno sysno) throws IOException, TransformerException {
 
         //get base directory
-        Path archivePath = archiveDirectory.toPath()
-                .resolve(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)))
-                .resolve(sysno.getBase().toString());
-
-        //get numerical directory names
-        String[] numericalPart = sysno.getNumericalPart().split("(?<=\\G.{3})");
-
-        //resolve numerical part
-        for (String part : numericalPart) {
-            archivePath = archivePath.resolve(part);
-        }
+        Path archivePath = resolveArchivePath(sysno);
 
         //versioning
         for (int i = 0;true;i++) {
@@ -248,5 +238,28 @@ public class Processor {
         try (FileWriter fw = new FileWriter(errorFile)) {
             fw.write(errorMsg);
         }
+    }
+
+    /**
+     * Resolves path in archive for the particular sysno. This resolution can be institution-specific.
+     * Default implementation is according to MZK, but can be easily overriden for other institution needs.
+     *
+     * @param sysno sysno to be resolved into path
+     * @return resolved path within archiveDirectory
+     */
+    protected Path resolveArchivePath(Sysno sysno) {
+        Path archivePath = archiveDirectory.toPath()
+                .resolve(Integer.toString(Calendar.getInstance().get(Calendar.YEAR)))
+                .resolve(sysno.getBase().toString());
+
+        //get numerical directory names
+        String[] numericalPart = sysno.getNumericalPart().split("(?<=\\G.{3})");
+
+        //resolve numerical part
+        for (String part : numericalPart) {
+            archivePath = archivePath.resolve(part);
+        }
+
+        return archivePath;
     }
 }
