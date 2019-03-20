@@ -28,7 +28,7 @@ public abstract class Processor {
     private static final String ERROR_NOT_DIRECTORY = "Supplied file is not a directory.";
     private static final String ERROR_COULD_NOT_RETREIVE_SYSNO = "Could not find sysno for supplied identifier.";
     private static final String ERROR_JAVA_EXCEPTION = "Java error occured during moving images to archive.";
-    private static final String ERROR_NOT_VALID_IMAGE_DIRECTORY = "Supplied directory must contain only images.";
+    private static final String ERROR_NOT_VALID_IMAGE_DIRECTORY = "Supplied directory must contain only images. Failing file: %s";
 
     private static final List<String> SUPPORTED_IMAGE_TYPES = Arrays.asList(".pdf", ".tiff", ".jpg", ".jp2");
 
@@ -94,18 +94,23 @@ public abstract class Processor {
         }
 
         for (File file : directory.listFiles()) {
+            String failingFile;
+
             if (!file.isDirectory()) {
                 moveToError(file, ERROR_NOT_DIRECTORY);
+                continue;
             }
 
-            if (!isValidImageDirectory(file)) {
-                moveToError(file, ERROR_NOT_VALID_IMAGE_DIRECTORY);
+            if ((failingFile = getInvalidFileInImageDirectory(file)) != null) {
+                moveToError(file, String.format(ERROR_NOT_VALID_IMAGE_DIRECTORY, failingFile));
+                continue;
             }
 
             Sysno s = loadSysno(file.getName());
 
             if (s == null) {
                 moveToError(file, ERROR_COULD_NOT_RETREIVE_SYSNO);
+                continue;
             }
 
             try {
@@ -121,21 +126,21 @@ public abstract class Processor {
      *
      * @param directory directory to be checked
      */
-    private boolean isValidImageDirectory(File directory) {
+    private String getInvalidFileInImageDirectory(File directory) {
 
         for(File f : directory.listFiles()) {
             //contents must be files
             if (!f.isFile()) {
-                return false;
+                return f.getName();
             }
 
             //contents must be supported image types
             if (!SUPPORTED_IMAGE_TYPES.contains(f.getName().substring(f.getName().lastIndexOf(".")))) {
-                return false;
+                return f.getName();
             }
         }
 
-        return true;
+        return null;
     }
 
     /**
