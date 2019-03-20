@@ -13,10 +13,11 @@ import org.apache.commons.cli.ParseException;
  * @author kremlacek
  */
 public class AppConfiguration {
+    enum ConfigType {
+        PROCESS, ARCHIVE
+    }
 
-    private AppConfiguration() {}
-
-    private static final Options argumentOptions;
+    private static final Options argumentOptions = new Options();;
     private static final CommandLineParser parser = new DefaultParser();
     private static final HelpFormatter helpFormatter = new HelpFormatter();
 
@@ -24,25 +25,41 @@ public class AppConfiguration {
     private File outputDirectory;
     private File errorDirectory;
 
-    static{
-        argumentOptions = new Options();
+    private AppConfiguration(ConfigType type) {
 
-        Option inputOpt = new Option("i", "input", true, "input directory path");
-        inputOpt.setRequired(true);
+        Option inputOpt;
+        Option outputOpt;
 
-        Option outputOpt = new Option("o", "output", true, "output directory path");
-        outputOpt.setRequired(true);
+        switch (type) {
+            case PROCESS:
+                inputOpt = new Option("i", "input", true, "input (ingest) directory path");
+                inputOpt.setRequired(true);
 
-        Option errorOpt = new Option("e", "error", true, "error directory path");
-        errorOpt.setRequired(true);
+                outputOpt = new Option("o", "output", true, "output (temporary archive) directory path");
+                outputOpt.setRequired(true);
 
-        argumentOptions.addOption(inputOpt);
-        argumentOptions.addOption(outputOpt);
-        argumentOptions.addOption(errorOpt);
+                Option errorOpt = new Option("e", "error", true, "error directory path");
+                errorOpt.setRequired(true);
+
+                argumentOptions.addOption(inputOpt);
+                argumentOptions.addOption(outputOpt);
+                argumentOptions.addOption(errorOpt);
+                break;
+            case ARCHIVE:
+                inputOpt = new Option("i", "input", true, "input (temporary archive) directory path");
+                inputOpt.setRequired(true);
+
+                outputOpt = new Option("o", "output", true, "output (permanent) directory path");
+                outputOpt.setRequired(true);
+
+                argumentOptions.addOption(inputOpt);
+                argumentOptions.addOption(outputOpt);
+                break;
+        }
     }
 
-    public static AppConfiguration getConfiguration(String[] args) {
-        var cfg = new AppConfiguration();
+    public static AppConfiguration getConfiguration(ConfigType type, String[] args) {
+        var cfg = new AppConfiguration(type);
 
         CommandLine cmd;
 
@@ -54,13 +71,25 @@ public class AppConfiguration {
             return null;
         }
 
-        cfg.inputDirectory = new File(cmd.getOptionValue("input"));
-        cfg.outputDirectory = new File(cmd.getOptionValue("output"));
-        cfg.errorDirectory = new File(cmd.getOptionValue("error"));
+        switch (type) {
+            case ARCHIVE:
+                cfg.inputDirectory = new File(cmd.getOptionValue("input"));
+                cfg.outputDirectory = new File(cmd.getOptionValue("output"));
 
-        checkDirectory(cfg.inputDirectory, false);
-        checkDirectory(cfg.outputDirectory, true);
-        checkDirectory(cfg.errorDirectory, true);
+                checkDirectory(cfg.inputDirectory, false);
+                checkDirectory(cfg.outputDirectory, true);
+
+                break;
+            case PROCESS:
+                cfg.inputDirectory = new File(cmd.getOptionValue("input"));
+                cfg.outputDirectory = new File(cmd.getOptionValue("output"));
+                cfg.errorDirectory = new File(cmd.getOptionValue("error"));
+
+                checkDirectory(cfg.inputDirectory, false);
+                checkDirectory(cfg.outputDirectory, true);
+                checkDirectory(cfg.errorDirectory, true);
+                break;
+        }
 
         return cfg;
     }
