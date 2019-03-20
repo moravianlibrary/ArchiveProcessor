@@ -30,7 +30,7 @@ public abstract class Processor {
     private static final String ERROR_JAVA_EXCEPTION = "Java error occured during moving images to archive.";
     private static final String ERROR_NOT_VALID_IMAGE_DIRECTORY = "Supplied directory must contain only images. Failing file: %s";
 
-    private static final List<String> SUPPORTED_IMAGE_TYPES = Arrays.asList(".pdf", ".tiff", ".jpg", ".jp2");
+    private static final List<String> SUPPORTED_IMAGE_TYPES = Arrays.asList(".pdf", ".tif", ".tiff", ".jpg", ".jp2");
 
     protected final File archiveDirectory;
     private final File errorDirectory;
