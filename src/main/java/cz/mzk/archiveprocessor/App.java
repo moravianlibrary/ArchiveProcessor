@@ -1,5 +1,6 @@
 package cz.mzk.archiveprocessor;
 
+import cz.mzk.archiveprocessor.archiver.Archiver;
 import cz.mzk.archiveprocessor.processor.MZKProcessor;
 import java.io.IOException;
 import java.util.Arrays;
@@ -55,6 +56,10 @@ public class App {
                 break;
             case ARCHIVE:
                 //TODO: implement archivation
+                var archiver = new Archiver(cfg);
+
+                archiver.run(cfg.getInputDirectory());
+
                 break;
         }
     }
